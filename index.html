@@ -94,9 +94,8 @@
     <script>
         document.getElementById('btn-login').addEventListener('click', async (e) => {
             e.preventDefault();
-            const username = prompt("Введите ваше имя пользователя (например Da_Ko или Ann_By):");
-            if (username && username.trim()) {
-                const cleanName = username.trim().replace(/\s+/g, '_');
+            const email = prompt("Введите ваш Email:");
+            if (email && email.trim()) {
                 const password = prompt("Введите пароль:");
 
                 if (!password) {
@@ -104,19 +103,28 @@
                     return;
                 }
 
-                const email = cleanName.toLowerCase() + '@antisite.local';
-
                 const { data, error } = await supabase.auth.signInWithPassword({
-                    email: email,
+                    email: email.trim(),
                     password: password
                 });
 
                 if (error) {
-                    alert("Ошибка входа: Неверное имя пользователя или пароль.");
+                    alert("Ошибка входа: Неверный Email или пароль.");
                     console.error("Login error:", error.message);
                 } else {
-                    localStorage.setItem('antisite_currentUser', cleanName);
-                    window.location.href = 'profile.html?user=' + cleanName;
+                    // Fetch the user's generated username from the profiles table
+                    const { data: profile, error: profileError } = await supabase
+                        .from('profiles')
+                        .select('username')
+                        .eq('id', data.user.id)
+                        .single();
+
+                    if (profile && profile.username) {
+                        localStorage.setItem('antisite_currentUser', profile.username);
+                        window.location.href = 'profile.html?user=' + profile.username;
+                    } else {
+                        alert("Ошибка: профиль не найден.");
+                    }
                 }
             }
         });
