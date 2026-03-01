@@ -4,6 +4,7 @@ DaKo*.html
 
 #folders
 node_modules
+Users
 *.zip
 
 # CSV extensions

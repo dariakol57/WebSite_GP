@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     // ----------------------------
 
-    // Now safely select these elements because they were just injected (or exist in Users/index.html)
+    // Now safely select these elements because they were just injected (or exist in Users/index.html or template.html)
     const container = document.getElementById('main-container') || document.querySelector('.container'); // Fallback for very old setups
     const peopleContainer = document.getElementById('main-container') || document.getElementById('people-container');
     const saveBtn = document.getElementById('save-btn');

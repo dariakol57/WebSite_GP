@@ -36,9 +36,9 @@ The "Antisite Modern Album" is a single-page web application that allows you to 
 
 ## File Structure
 
-- `Users/index.html` - The structural backbone. Uses semantic HTML (`<header>`, `<main>`, etc.) and links the styles and icons.
+- `template.html` - The structural backbone. Uses semantic HTML (`<header>`, `<main>`, etc.) and links the styles and icons.
 - `styles.css` - Contains all visual rules, color variables, animations, and responsive breakpoints.
 - `script.js` - The logic handler. It manages file uploads (using `FileReader` to convert images to base64 strings), creates elements dynamically on the DOM, listens to user inputs, and handles the local storage syncing.
 
 ## How to view
-Simply open `Users/index.html` in any modern web browser. No server setup is required.
+Simply open `template.html` in any modern web browser. No server setup is required.
