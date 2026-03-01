@@ -1,10 +1,17 @@
 # files
 DaKo*.html
+
+# files
+DaKoo_antisite.html
+
 *.json
 
 #folders
 node_modules
+
+#folders
 Users
+
 *.zip
 
 # CSV extensions
