@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Альбом замечательных людей</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .landing-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 80px);
+            text-align: center;
+        }
+
+        .landing-panel {
+            max-width: 600px;
+            padding: 50px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .landing-title {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #fff, #919bb1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .landing-quote {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-bottom: 40px;
+            line-height: 1.5;
+        }
+
+        .btn-register {
+            display: inline-flex;
+            text-decoration: none;
+            font-size: 1.2rem;
+            padding: 15px 35px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .landing-title {
+                font-size: 2.2rem;
+            }
+
+            .landing-quote {
+                font-size: 1.1rem;
+            }
+
+            .landing-panel {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container landing-container">
+        <div class="glass-panel landing-panel">
+            <h1 class="landing-title">Альбом замечательных людей</h1>
+            <p class="landing-quote">"Скажи мне, кто твой друг, и я скажу, кто ты"</p>
+            <div style="display: flex; justify-content: center; gap: 15px;">
+                <a href="registration.html" class="btn btn-primary btn-register">Регистрация</a>
+                <a href="#" id="btn-login" class="btn btn-primary btn-register"
+                    style="background: rgba(255,255,255,0.1); color: var(--text-primary);">Войти</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase_client.js"></script>
+
+    <script>
+        document.getElementById('btn-login').addEventListener('click', async (e) => {
+            e.preventDefault();
+            const username = prompt("Введите ваше имя пользователя (например Da_Ko или Ann_By):");
+            if (username && username.trim()) {
+                const cleanName = username.trim().replace(/\s+/g, '_');
+                const password = prompt("Введите пароль:");
+
+                if (!password) {
+                    alert("Пароль обязателен для входа!");
+                    return;
+                }
+
+                const email = cleanName.toLowerCase() + '@antiisite.local';
+
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+
+                if (error) {
+                    alert("Ошибка входа: Неверное имя пользователя или пароль.");
+                    console.error("Login error:", error.message);
+                } else {
+                    localStorage.setItem('antiisite_currentUser', cleanName);
+                    window.location.href = 'profile.html?user=' + cleanName;
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
