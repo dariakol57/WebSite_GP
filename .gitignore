@@ -1,0 +1,10 @@
+# files
+DaKo_*.html
+*.json
+
+#folders
+node_modules
+*.zip
+
+# CSV extensions
+

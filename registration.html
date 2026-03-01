@@ -134,7 +134,7 @@
             if (password !== passwordConfirm) { alert('Пароли не совпадают!'); return; }
 
             const ownerId = `${name}_${surname}`.replace(/\s+/g, '_');
-            const email = ownerId.toLowerCase() + '@antiisite.local';
+            const email = ownerId.toLowerCase() + '@antisite.local';
 
             // Photo handling
             let finalPhotoUrl = 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=400';
@@ -192,7 +192,7 @@
                 alert('Регистрация успешна!');
 
                 // Set local login state
-                localStorage.setItem('antiisite_currentUser', ownerId);
+                localStorage.setItem('antisite_currentUser', ownerId);
 
                 // Redirect to dynamic profile
                 window.location.href = `profile.html?user=${ownerId}`;

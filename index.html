@@ -104,7 +104,7 @@
                     return;
                 }
 
-                const email = cleanName.toLowerCase() + '@antiisite.local';
+                const email = cleanName.toLowerCase() + '@antisite.local';
 
                 const { data, error } = await supabase.auth.signInWithPassword({
                     email: email,
@@ -115,7 +115,7 @@
                     alert("Ошибка входа: Неверное имя пользователя или пароль.");
                     console.error("Login error:", error.message);
                 } else {
-                    localStorage.setItem('antiisite_currentUser', cleanName);
+                    localStorage.setItem('antisite_currentUser', cleanName);
                     window.location.href = 'profile.html?user=' + cleanName;
                 }
             }
