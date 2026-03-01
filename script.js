@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (!pageOwnerId) {
         // Not logged in and no user requested
-        window.location.href = 'main.html';
+        window.location.href = 'index.html';
         return;
     }
 
@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (currentUsername) {
             window.location.href = 'profile.html?user=' + currentUsername;
         } else {
-            window.location.href = 'main.html';
+            window.location.href = 'index.html';
         }
         return;
     }
