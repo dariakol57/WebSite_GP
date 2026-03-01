@@ -317,7 +317,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 const { data: newCard } = await supabase.from('cards').insert({
                     profile_id: targetProfile.id,
-                    section_name: defaultSec,
+                    section_id: sectionId,
                     name: '',
                     story: '',
                     photo_url: '',
@@ -522,7 +522,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     addP.addEventListener('click', async () => {
                         const { data: newCard } = await supabase.from('cards').insert({
                             profile_id: targetProfile.id,
-                            section_name: section,
+                            section_id: sectionsById[section],
                             name: '',
                             story: '',
                             photo_url: '',
