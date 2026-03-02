@@ -769,29 +769,32 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         // Render Friends
-        friendsList.innerHTML = myFriends.map(f => `
+        let friendsHTML = myFriends.map(f => `
             <div class="sidebar-item">
-                <span class="sidebar-item-name" onclick="window.location.href='profile.html?user=${f}'">${f.replace(/_/g, ' ')}</span>
+                <a href="profile.html?user=${f}" class="sidebar-item-name" style="text-decoration: none; color: inherit; cursor: pointer; display: block; width: 100%;">${f.replace(/_/g, ' ')}</a>
             </div>
-        `).join('') || '<div style="color:var(--text-secondary); padding: 10px;">No friends yet</div>';
+        `).join('');
+
+        if (myReqs.length > 0) {
+            friendsHTML += myReqs.map(r => `
+                <div class="sidebar-item" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+                    <a href="profile.html?user=${r}" class="sidebar-item-name" style="text-decoration: none; color: inherit; cursor: pointer; display: block; width: 100%;">${r.replace(/_/g, ' ')} <span style="font-size: 0.8rem; color: var(--primary-color);">(New Request)</span></a>
+                    <button class="btn btn-primary" style="padding: 4px 12px; font-size: 0.8rem;" onclick="acceptRequest('${r}')">Accept Request</button>
+                </div>
+            `).join('');
+        }
+
+        friendsList.innerHTML = friendsHTML || '<div style="color:var(--text-secondary); padding: 10px;">No friends yet</div>';
 
         // Render Saved
         savedList.innerHTML = mySaved.map(s => `
             <div class="sidebar-item">
-                <span class="sidebar-item-name" onclick="window.location.href='profile.html?user=${s}'">${s.replace(/_/g, ' ')}</span>
+                <a href="profile.html?user=${s}" class="sidebar-item-name" style="text-decoration: none; color: inherit; cursor: pointer; display: block; width: 100%;">${s.replace(/_/g, ' ')}</a>
             </div>
         `).join('') || '<div style="color:var(--text-secondary); padding: 10px;">No saved users</div>';
 
-        // Render Requests
-        if (myReqs.length > 0) {
-            reqsContainer.style.display = 'block';
-            reqsList.innerHTML = myReqs.map(r => `
-                <div class="sidebar-item">
-                    <span class="sidebar-item-name" onclick="window.location.href='profile.html?user=${r}'">${r.replace(/_/g, ' ')}</span>
-                    <button class="btn btn-primary" style="padding: 2px 8px; font-size: 0.8rem;" onclick="acceptRequest('${r}')">Accept</button>
-                </div>
-            `).join('');
-        } else {
+        // Hide the old requests container
+        if (reqsContainer) {
             reqsContainer.style.display = 'none';
         }
     }
