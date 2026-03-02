@@ -213,9 +213,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let peopleData = [];
     if (cardsData) {
         peopleData = cardsData.map(c => {
-            let sectionName = 'Альбом замечательных людей';
-            const matchedSec = sectionsData?.find(s => s.id === c.section_id);
-            if (matchedSec) sectionName = matchedSec.name;
+            let sectionName = c.section_name || 'Альбом замечательных людей';
 
             return {
                 id: c.id,
@@ -317,7 +315,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 const { data: newCard } = await supabase.from('cards').insert({
                     profile_id: targetProfile.id,
-                    section_id: sectionId,
+                    section_name: defaultSec,
                     name: '',
                     story: '',
                     photo_url: '',
@@ -433,7 +431,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     name: p.name,
                     story: p.story,
                     photo_url: p.photo,
-                    section_id: secId,
+                    section_name: p.section,
                     visibility: p.visibility
                 }).eq('id', p.id).select();
 
@@ -530,7 +528,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     addP.addEventListener('click', async () => {
                         const { data: newCard } = await supabase.from('cards').insert({
                             profile_id: targetProfile.id,
-                            section_id: sectionsById[section],
+                            section_name: section,
                             name: '',
                             story: '',
                             photo_url: '',
