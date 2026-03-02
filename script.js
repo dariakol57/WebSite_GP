@@ -27,6 +27,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                         </div>
                     </div>
                     <div class="sidebar-section">
+                        <h3>Действия</h3>
+                        <div class="sidebar-item">
+                            <span class="sidebar-item-name" style="cursor: pointer; font-weight: bold; color: #ff4444;" onclick="logout()">Выйти</span>
+                        </div>
+                    </div>
+                    <div class="sidebar-section">
                         <h3>Мои друзья</h3>
                         <div id="sidebar-friends-list">Loading...</div>
                     </div>
@@ -733,21 +739,34 @@ document.addEventListener('DOMContentLoaded', async () => {
         savedList.innerHTML = 'Loading...';
 
         // Fetch accepted friends
-        const { data: friends1 } = await supabase.from('friends').select('profiles!friends_user_id_2_fkey(username, first_name)').eq('user_id_1', currentUserProfileObj.id).eq('status', 'accepted');
-        const { data: friends2 } = await supabase.from('friends').select('profiles!friends_user_id_1_fkey(username, first_name)').eq('user_id_2', currentUserProfileObj.id).eq('status', 'accepted');
+        const { data: friends1 } = await supabase.from('friends').select('*').eq('requester_id', currentUserProfileObj.id).eq('status', 'accepted');
+        const { data: friends2 } = await supabase.from('friends').select('*').eq('target_id', currentUserProfileObj.id).eq('status', 'accepted');
 
-        let myFriends = [
-            ...(friends1?.map(f => f.profiles.username) || []),
-            ...(friends2?.map(f => f.profiles.username) || [])
-        ];
+        let friendIds = [];
+        if (friends1) friends1.forEach(f => friendIds.push(f.target_id));
+        if (friends2) friends2.forEach(f => friendIds.push(f.requester_id));
+
+        let myFriends = [];
+        if (friendIds.length > 0) {
+            const { data: fProfs } = await supabase.from('profiles').select('username').in('id', friendIds);
+            if (fProfs) myFriends = fProfs.map(p => p.username);
+        }
 
         // Fetch sent requests
-        const { data: sentReqs } = await supabase.from('friends').select('profiles!friends_target_id_fkey(username, first_name)').eq('requester_id', currentUserProfileObj.id).eq('status', 'pending');
-        let mySaved = sentReqs?.map(req => req.profiles.username) || [];
+        const { data: sentReqs } = await supabase.from('friends').select('target_id').eq('requester_id', currentUserProfileObj.id).eq('status', 'pending');
+        let mySaved = [];
+        if (sentReqs && sentReqs.length > 0) {
+            const { data: sProfs } = await supabase.from('profiles').select('username').in('id', sentReqs.map(r => r.target_id));
+            if (sProfs) mySaved = sProfs.map(p => p.username);
+        }
 
         // Fetch received requests
-        const { data: receivedReqs } = await supabase.from('friends').select('profiles!friends_requester_id_fkey(username, first_name)').eq('target_id', currentUserProfileObj.id).eq('status', 'pending');
-        let myReqs = receivedReqs?.map(req => req.profiles.username) || [];
+        const { data: receivedReqs } = await supabase.from('friends').select('requester_id').eq('target_id', currentUserProfileObj.id).eq('status', 'pending');
+        let myReqs = [];
+        if (receivedReqs && receivedReqs.length > 0) {
+            const { data: rProfs } = await supabase.from('profiles').select('username').in('id', receivedReqs.map(r => r.requester_id));
+            if (rProfs) myReqs = rProfs.map(p => p.username);
+        }
 
         // Render Friends
         friendsList.innerHTML = myFriends.map(f => `
@@ -794,6 +813,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 location.reload();
             }
         }
+    };
+
+    window.logout = async function () {
+        await supabase.auth.signOut();
+        localStorage.removeItem('antisite_currentUser');
+        window.location.href = 'index.html';
     };
 
     renderAll();
