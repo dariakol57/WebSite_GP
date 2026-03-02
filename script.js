@@ -429,13 +429,21 @@ document.addEventListener('DOMContentLoaded', async () => {
             const p = peopleData[i];
             const secId = sectionsById[p.section];
             if (p.id) {
-                await supabase.from('cards').update({
+                const { data: updatedCard, error: updateError } = await supabase.from('cards').update({
                     name: p.name,
                     story: p.story,
                     photo_url: p.photo,
                     section_id: secId,
                     visibility: p.visibility
-                }).eq('id', p.id);
+                }).eq('id', p.id).select();
+
+                if (updateError) {
+                    console.error("Failed to update card", p.id, updateError);
+                    alert("Card saving failed: " + updateError.message);
+                } else if (!updatedCard || updatedCard.length === 0) {
+                    console.error("Row Level Security blocked the update for card", p.id);
+                    alert("Update blocked! Please configure an UPDATE policy for the 'cards' table in Supabase.");
+                }
             }
         }
 
