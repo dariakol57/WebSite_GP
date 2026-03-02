@@ -21,6 +21,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </div>
                 <div class="sidebar-content">
                     <div class="sidebar-section">
+                        <h3>Главная</h3>
+                        <div class="sidebar-item">
+                            <span class="sidebar-item-name" style="cursor: pointer; font-weight: bold; color: var(--primary-color);" onclick="window.location.href='profile.html?user=' + localStorage.getItem('antisite_currentUser')">Моя Страница</span>
+                        </div>
+                    </div>
+                    <div class="sidebar-section">
                         <h3>Мои друзья</h3>
                         <div id="sidebar-friends-list">Loading...</div>
                     </div>
@@ -736,11 +742,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         ];
 
         // Fetch sent requests
-        const { data: sentReqs } = await supabase.from('friends').select('profiles!friends_target_id_fkey(username)').eq('requester_id', currentUserProfileObj.id).eq('status', 'pending');
+        const { data: sentReqs } = await supabase.from('friends').select('profiles!friends_target_id_fkey(username, first_name)').eq('requester_id', currentUserProfileObj.id).eq('status', 'pending');
         let mySaved = sentReqs?.map(req => req.profiles.username) || [];
 
         // Fetch received requests
-        const { data: receivedReqs } = await supabase.from('friends').select('profiles!friends_requester_id_fkey(username)').eq('target_id', currentUserProfileObj.id).eq('status', 'pending');
+        const { data: receivedReqs } = await supabase.from('friends').select('profiles!friends_requester_id_fkey(username, first_name)').eq('target_id', currentUserProfileObj.id).eq('status', 'pending');
         let myReqs = receivedReqs?.map(req => req.profiles.username) || [];
 
         // Render Friends
