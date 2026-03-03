@@ -97,9 +97,12 @@
             </div>
 
             <div>
-                <label class="reg-label" for="reg-photo">Ваше фото (Файл)</label>
-                <input class="reg-input" style="padding: 9px 15px; cursor: pointer;" id="reg-photo" type="file"
-                    accept="image/*">
+                <label class="reg-label">Ваше фото</label>
+                <input id="reg-photo" type="file" accept="image/*" style="display: none;" onchange="document.getElementById('file-name-display').textContent = this.files.length > 0 ? this.files[0].name : 'Файл не выбран'">
+                <button type="button" class="btn" style="width: 100%; justify-content: center; padding: 12px; border: 1px dashed var(--accent); background: rgba(88, 166, 255, 0.05);" onclick="document.getElementById('reg-photo').click()">
+                    📸 Загрузить фото
+                </button>
+                <div id="file-name-display" style="font-size: 0.85rem; color: var(--text-secondary); text-align: center; margin-top: 8px;">Файл не выбран</div>
             </div>
 
             <div>
