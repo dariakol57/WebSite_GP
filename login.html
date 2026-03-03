@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход в личный альбом</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 80px);
+        }
+
+        .login-panel {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .login-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #fff, #919bb1);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .login-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .login-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 12px 15px;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .login-input:focus {
+            border-color: var(--accent);
+        }
+
+        .login-btn {
+            margin-top: 10px;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .register-link a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container login-container">
+        <div class="glass-panel login-panel">
+            <h1 class="login-title">✨ Вход</h1>
+
+            <div>
+                <label class="login-label" for="login-username">Логин (Имя пользователя)</label>
+                <input class="login-input" id="login-username" type="text" placeholder="Введите ваш логин">
+            </div>
+
+            <div>
+                <label class="login-label" for="login-password">Пароль</label>
+                <div style="position: relative;">
+                    <input class="login-input" id="login-password" type="password" placeholder="Введите пароль"
+                        style="padding-right: 40px;">
+                    <span class="password-toggle" onclick="togglePassword('login-password', this)"
+                        style="position: absolute; right: 12px; top: 12px; cursor: pointer; color: var(--text-secondary); font-size: 1.2rem; user-select: none;">👁️</span>
+                </div>
+            </div>
+
+            <button id="login-btn" class="btn btn-primary login-btn">Войти</button>
+
+            <div class="register-link">
+                Нет аккаунта? <a href="registration.html">Создать альбом</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase_client.js"></script>
+
+    <script>
+        function togglePassword(inputId, iconElement) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                iconElement.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                iconElement.textContent = '👀';
+            }
+        }
+
+        document.getElementById('login-btn').addEventListener('click', async () => {
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value;
+
+            if (!username) { alert('Пожалуйста, введите логин'); return; }
+            if (!password) { alert('Пожалуйста, введите пароль'); return; }
+
+            const fakeEmail = `${username.toLowerCase()}@albomzl.local`;
+
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: fakeEmail,
+                    password: password
+                });
+
+                if (error) throw error;
+
+                // Set local login state
+                localStorage.setItem('AlbomZL_currentUser', username);
+
+                // Redirect to dynamic profile
+                window.location.href = `profile.html?user=${username}`;
+
+            } catch (error) {
+                console.error("Login error:", error);
+                if (error.message.includes("Invalid login credentials") || error.message === 'Invalid login credentials') {
+                    alert("Ошибка: Неверный логин или пароль");
+                } else {
+                    alert("Ошибка входа: " + error.message);
+                }
+            }
+        });
+
+        // Handle Enter key press
+        document.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                document.getElementById('login-btn').click();
+            }
+        });
+    </script>
+</body>
+
+</html>

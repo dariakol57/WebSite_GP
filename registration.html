@@ -92,27 +92,43 @@
             </div>
 
             <div>
-                <label class="reg-label" for="reg-email">Ваш Email</label>
-                <input class="reg-input" id="reg-email" type="email" placeholder="example@mail.com">
+                <label class="reg-label" for="reg-username">Логин (Имя пользователя)</label>
+                <input class="reg-input" id="reg-username" type="text"
+                    placeholder="Уникальный логин (только англ. буквы и цифры)">
             </div>
 
             <div>
                 <label class="reg-label">Ваше фото</label>
-                <input id="reg-photo" type="file" accept="image/*" style="display: none;" onchange="document.getElementById('file-name-display').textContent = this.files.length > 0 ? this.files[0].name : 'Файл не выбран'">
-                <button type="button" class="btn" style="width: 100%; justify-content: center; padding: 12px; border: 1px dashed var(--accent); background: rgba(88, 166, 255, 0.05);" onclick="document.getElementById('reg-photo').click()">
+                <input id="reg-photo" type="file" accept="image/*" style="display: none;"
+                    onchange="document.getElementById('file-name-display').textContent = this.files.length > 0 ? this.files[0].name : 'Файл не выбран'">
+                <button type="button" class="btn"
+                    style="width: 100%; justify-content: center; padding: 12px; border: 1px dashed var(--accent); background: rgba(88, 166, 255, 0.05);"
+                    onclick="document.getElementById('reg-photo').click()">
                     📸 Загрузить фото
                 </button>
-                <div id="file-name-display" style="font-size: 0.85rem; color: var(--text-secondary); text-align: center; margin-top: 8px;">Файл не выбран</div>
+                <div id="file-name-display"
+                    style="font-size: 0.85rem; color: var(--text-secondary); text-align: center; margin-top: 8px;">Файл
+                    не выбран</div>
             </div>
 
             <div>
                 <label class="reg-label" for="reg-password">Пароль</label>
-                <input class="reg-input" id="reg-password" type="password" placeholder="Введите пароль">
+                <div style="position: relative;">
+                    <input class="reg-input" id="reg-password" type="password" placeholder="Введите пароль"
+                        style="padding-right: 40px;">
+                    <span class="password-toggle" onclick="togglePassword('reg-password', this)"
+                        style="position: absolute; right: 12px; top: 12px; cursor: pointer; color: var(--text-secondary); font-size: 1.2rem; user-select: none;">👁️</span>
+                </div>
             </div>
 
             <div>
                 <label class="reg-label" for="reg-password-confirm">Подтвердите пароль</label>
-                <input class="reg-input" id="reg-password-confirm" type="password" placeholder="Повторите пароль">
+                <div style="position: relative;">
+                    <input class="reg-input" id="reg-password-confirm" type="password" placeholder="Повторите пароль"
+                        style="padding-right: 40px;">
+                    <span class="password-toggle" onclick="togglePassword('reg-password-confirm', this)"
+                        style="position: absolute; right: 12px; top: 12px; cursor: pointer; color: var(--text-secondary); font-size: 1.2rem; user-select: none;">👁️</span>
+                </div>
             </div>
 
             <!-- <div>
@@ -129,21 +145,38 @@
     <script src="supabase_client.js"></script>
 
     <script>
+        function togglePassword(inputId, iconElement) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                iconElement.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                iconElement.textContent = '👀';
+            }
+        }
+
         document.getElementById('create-album-btn').addEventListener('click', async () => {
             const name = document.getElementById('reg-name').value.trim();
             const surname = document.getElementById('reg-surname').value.trim();
-            const email = document.getElementById('reg-email').value.trim();
+            const username = document.getElementById('reg-username').value.trim();
             const photoInput = document.getElementById('reg-photo');
             const password = document.getElementById('reg-password').value;
             const passwordConfirm = document.getElementById('reg-password-confirm').value;
 
             if (!name) { alert('Пожалуйста, введите имя'); return; }
             if (!surname) { alert('Пожалуйста, введите фамилию'); return; }
-            if (!email) { alert('Пожалуйста, введите Email'); return; }
+            if (!username) { alert('Пожалуйста, введите логин'); return; }
             if (!password || password.length < 6) { alert('Пожалуйста, введите пароль (минимум 6 символов)'); return; }
             if (password !== passwordConfirm) { alert('Пароли не совпадают!'); return; }
 
-            const ownerId = `${name}_${surname}`.replace(/\s+/g, '_');
+            if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+                alert('Логин может содержать только английские буквы, цифры и подчеркивание (_)');
+                return;
+            }
+
+            const ownerId = username;
+            const fakeEmail = `${username.toLowerCase()}@albomzl.local`;
 
             // Photo handling
             let finalPhotoUrl = 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=400';
@@ -157,9 +190,20 @@
             }
 
             try {
+                // 0. Check if username already exists in profiles
+                const { data: existingProfile } = await supabase
+                    .from('profiles')
+                    .select('id')
+                    .eq('username', ownerId)
+                    .single();
+
+                if (existingProfile) {
+                    throw new Error("already registered");
+                }
+
                 // 1. Sign up user via Supabase Auth
                 const { data: authData, error: authError } = await supabase.auth.signUp({
-                    email: email,
+                    email: fakeEmail,
                     password: password
                 });
 

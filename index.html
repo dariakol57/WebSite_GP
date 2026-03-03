@@ -81,8 +81,8 @@
             <p class="landing-quote">"Скажи мне, кто твой друг, и я скажу, кто ты"</p>
             <div style="display: flex; justify-content: center; gap: 15px;">
                 <a href="registration.html" class="btn btn-primary btn-register">Регистрация</a>
-                <a href="#" id="btn-login" class="btn btn-primary btn-register"
-                    style="background: rgba(255,255,255,0.1); color: var(--text-primary);">Войти</a>
+                <a href="login.html" class="btn btn-primary btn-register"
+                    style="background: rgba(255, 255, 255, 0.1); color: var(--text-primary);">Войти</a>
             </div>
         </div>
     </div>
@@ -92,42 +92,7 @@
     <script src="supabase_client.js"></script>
 
     <script>
-        document.getElementById('btn-login').addEventListener('click', async (e) => {
-            e.preventDefault();
-            const email = prompt("Введите ваш Email:");
-            if (email && email.trim()) {
-                const password = prompt("Введите пароль:");
-
-                if (!password) {
-                    alert("Пароль обязателен для входа!");
-                    return;
-                }
-
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email: email.trim(),
-                    password: password
-                });
-
-                if (error) {
-                    alert("Ошибка входа: Неверный Email или пароль.");
-                    console.error("Login error:", error.message);
-                } else {
-                    // Fetch the user's generated username from the profiles table
-                    const { data: profile, error: profileError } = await supabase
-                        .from('profiles')
-                        .select('username')
-                        .eq('id', data.user.id)
-                        .single();
-
-                    if (profile && profile.username) {
-                        localStorage.setItem('AlbomZL_currentUser', profile.username);
-                        window.location.href = 'profile.html?user=' + profile.username;
-                    } else {
-                        alert("Ошибка: профиль не найден.");
-                    }
-                }
-            }
-        });
+        // Scripts removed, login logic is now handled in login.html
     </script>
 </body>
 
