@@ -81,15 +81,7 @@
         <div class="glass-panel reg-panel">
             <h1 class="reg-title">✨ Мой альбом</h1>
 
-            <div>
-                <label class="reg-label" for="reg-name">Ваше имя</label>
-                <input class="reg-input" id="reg-name" type="text" placeholder="Например: Глафира">
-            </div>
-
-            <div>
-                <label class="reg-label" for="reg-surname">Ваша фамилия</label>
-                <input class="reg-input" id="reg-surname" type="text" placeholder="Например: By">
-            </div>
+            <!-- Поля "Имя" и "Фамилия" удалены -->
 
             <div>
                 <label class="reg-label" for="reg-email">Ваш Email</label>
@@ -102,19 +94,7 @@
                     placeholder="Уникальный логин (только англ. буквы и цифры)">
             </div>
 
-            <div>
-                <label class="reg-label">Ваше фото</label>
-                <input id="reg-photo" type="file" accept="image/*" style="display: none;"
-                    onchange="document.getElementById('file-name-display').textContent = this.files.length > 0 ? this.files[0].name : 'Файл не выбран'">
-                <button type="button" class="btn"
-                    style="width: 100%; justify-content: center; padding: 12px; border: 1px dashed var(--accent); background: rgba(88, 166, 255, 0.05);"
-                    onclick="document.getElementById('reg-photo').click()">
-                    📸 Загрузить фото
-                </button>
-                <div id="file-name-display"
-                    style="font-size: 0.85rem; color: var(--text-secondary); text-align: center; margin-top: 8px;">Файл
-                    не выбран</div>
-            </div>
+            <!-- Поле "Фото" удалено -->
 
             <div>
                 <label class="reg-label" for="reg-password">Пароль</label>
@@ -162,16 +142,11 @@
         }
 
         document.getElementById('create-album-btn').addEventListener('click', async () => {
-            const name = document.getElementById('reg-name').value.trim();
-            const surname = document.getElementById('reg-surname').value.trim();
             const email = document.getElementById('reg-email').value.trim();
             const username = document.getElementById('reg-username').value.trim();
-            const photoInput = document.getElementById('reg-photo');
             const password = document.getElementById('reg-password').value;
             const passwordConfirm = document.getElementById('reg-password-confirm').value;
 
-            if (!name) { alert('Пожалуйста, введите имя'); return; }
-            if (!surname) { alert('Пожалуйста, введите фамилию'); return; }
             if (!email) { alert('Пожалуйста, введите Email'); return; }
             if (!username) { alert('Пожалуйста, введите логин'); return; }
             if (!password || password.length < 6) { alert('Пожалуйста, введите пароль (минимум 6 символов)'); return; }
@@ -184,16 +159,7 @@
 
             const ownerId = username;
 
-            // Photo handling
-            let finalPhotoUrl = 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=400';
-
-            if (photoInput.files[0]) {
-                const reader = new FileReader();
-                finalPhotoUrl = await new Promise(resolve => {
-                    reader.onload = () => resolve(reader.result);
-                    reader.readAsDataURL(photoInput.files[0]);
-                });
-            }
+            let finalPhotoUrl = 'https://sobakovod.club/uploads/posts/2022-02/thumbs/1643985243_1-sobakovod-club-p-sobaki-poroda-sobak-griffon-karlikovii-1.jpg';//'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=400';
 
             try {
                 // 0. Check if username already exists in profiles
@@ -226,8 +192,8 @@
                         {
                             id: authData.user.id,
                             username: ownerId,
-                            first_name: name,
-                            last_name: surname,
+                            first_name: username, // Fallback, no separate name field now
+                            last_name: '', // Fallback, no separate surname field now
                             photo_url: finalPhotoUrl,
                             about: `Кто я? <br> Что для меня важно?`
                         }
