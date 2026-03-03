@@ -1,10 +1,10 @@
-# Antisite - Modern Album
+# AlbomZL - Modern Album
 
 This folder contains the modernized, redesigned version of the "Great People Album" (Альбом замечательных людей). It was created as a sleek, dynamic alternative to the original design, incorporating modern web development and UI/UX best practices.
 
 ## Overview
 
-The "Antisite Modern Album" is a single-page web application that allows you to collect and document stories about great people. It runs entirely in your browser using LocalStorage to save your data automatically without needing a backend server. 
+The "AlbomZL Modern Album" is a single-page web application that allows you to collect and document stories about great people. It runs entirely in your browser using LocalStorage to save your data automatically without needing a backend server. 
 
 ## Key Features
 

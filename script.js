@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <div class="sidebar-section">
                         <h3>Главная</h3>
                         <div class="sidebar-item">
-                            <span class="sidebar-item-name" style="cursor: pointer; font-weight: bold; color: var(--primary-color);" onclick="window.location.href='profile.html?user=' + localStorage.getItem('antisite_currentUser')">Моя Страница</span>
+                            <span class="sidebar-item-name" style="cursor: pointer; font-weight: bold; color: var(--primary-color);" onclick="window.location.href='profile.html?user=' + localStorage.getItem('AlbomZL_currentUser')">Моя Страница</span>
                         </div>
                     </div>
                     <div class="sidebar-section">
@@ -820,7 +820,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     window.logout = async function () {
         await supabase.auth.signOut();
-        localStorage.removeItem('antisite_currentUser');
+        localStorage.removeItem('AlbomZL_currentUser');
         window.location.href = 'index.html';
     };
 

@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
         plus: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>`
     };
 
-    let pageData = JSON.parse(localStorage.getItem('antisite_pageData')) || {
+    let pageData = JSON.parse(localStorage.getItem('AlbomZL_pageData')) || {
         title: titleEl.innerHTML,
         about: aboutEl.innerHTML,
         photo: profilePhotoEl.src,
@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
         friends: []
     };
 
-    let peopleData = JSON.parse(localStorage.getItem('antisite_peopleData')) || [];
+    let peopleData = JSON.parse(localStorage.getItem('AlbomZL_peopleData')) || [];
 
     // Optional Export script handling
     const exportDataScript = document.getElementById('export-data-script');
@@ -195,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const inUsersFolder = window.location.pathname.includes('/Users/');
     function getPageUrl(username) {
         const clean = username.replace(/\s+/g, '_');
-        return (inUsersFolder ? '' : 'Users/') + clean + '_antisite.html';
+        return (inUsersFolder ? '' : 'Users/') + clean + '_AlbomZL.html';
     }
 
     // Apply saved data
@@ -203,13 +203,13 @@ document.addEventListener('DOMContentLoaded', () => {
     aboutEl.innerHTML = pageData.about;
     if (pageData.photo) profilePhotoEl.src = pageData.photo;
 
-    const currentUser = localStorage.getItem('antisite_currentUser');
+    const currentUser = localStorage.getItem('AlbomZL_currentUser');
 
     let pageOwnerId = pageData.ownerId;
     const pathname = window.location.pathname;
     const filename = pathname.split('/').pop();
-    if (filename && filename.includes('_antisite.html')) {
-        const urlOwner = decodeURIComponent(filename.replace('_antisite.html', ''));
+    if (filename && filename.includes('_AlbomZL.html')) {
+        const urlOwner = decodeURIComponent(filename.replace('_AlbomZL.html', ''));
         if (urlOwner) {
             pageOwnerId = urlOwner;
         }
@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const isOwner = Boolean(currentUser) && currentUser === pageOwnerId;
-    let currentUserFriends = JSON.parse(localStorage.getItem('antisite_friends_' + currentUser)) || [];
+    let currentUserFriends = JSON.parse(localStorage.getItem('AlbomZL_friends_' + currentUser)) || [];
     const isFriend = currentUserFriends.includes(pageOwnerId) || (pageData.friends && pageData.friends.includes(currentUser));
 
     // Visibility Check
@@ -253,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentUser && currentUser !== pageOwnerId) {
             const addFriendBtn = document.getElementById('add-friend-btn');
             if (addFriendBtn) {
-                let savedList = JSON.parse(localStorage.getItem('antisite_saved_' + currentUser)) || [];
+                let savedList = JSON.parse(localStorage.getItem('AlbomZL_saved_' + currentUser)) || [];
                 let isSaved = savedList.includes(pageOwnerId);
 
                 addFriendBtn.style.display = 'inline-flex';
@@ -273,13 +273,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     addFriendBtn.onclick = () => {
                         // Add to my saved list
                         savedList.push(pageOwnerId);
-                        localStorage.setItem('antisite_saved_' + currentUser, JSON.stringify(savedList));
+                        localStorage.setItem('AlbomZL_saved_' + currentUser, JSON.stringify(savedList));
 
                         // Send request to target
-                        let targetReqs = JSON.parse(localStorage.getItem('antisite_requests_' + pageOwnerId)) || [];
+                        let targetReqs = JSON.parse(localStorage.getItem('AlbomZL_requests_' + pageOwnerId)) || [];
                         if (!targetReqs.includes(currentUser)) {
                             targetReqs.push(currentUser);
-                            localStorage.setItem('antisite_requests_' + pageOwnerId, JSON.stringify(targetReqs));
+                            localStorage.setItem('AlbomZL_requests_' + pageOwnerId, JSON.stringify(targetReqs));
                         }
 
                         alert('Friend request sent and user saved!');
@@ -378,8 +378,8 @@ document.addEventListener('DOMContentLoaded', () => {
         pageData.about = aboutEl.innerHTML;
         pageData.photo = profilePhotoEl.src;
 
-        localStorage.setItem('antisite_pageData', JSON.stringify(pageData));
-        localStorage.setItem('antisite_peopleData', JSON.stringify(peopleData));
+        localStorage.setItem('AlbomZL_pageData', JSON.stringify(pageData));
+        localStorage.setItem('AlbomZL_peopleData', JSON.stringify(peopleData));
 
         if (saveBtn && isOwner) {
             const originalText = saveBtn.innerHTML;
@@ -624,21 +624,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!friendsList || !savedList || !reqsList) return;
         if (!currentUser) return; // Must be logged in to have a sidebar
 
-        const myFriends = JSON.parse(localStorage.getItem('antisite_friends_' + currentUser)) || [];
-        const mySaved = JSON.parse(localStorage.getItem('antisite_saved_' + currentUser)) || [];
-        const myReqs = JSON.parse(localStorage.getItem('antisite_requests_' + currentUser)) || [];
+        const myFriends = JSON.parse(localStorage.getItem('AlbomZL_friends_' + currentUser)) || [];
+        const mySaved = JSON.parse(localStorage.getItem('AlbomZL_saved_' + currentUser)) || [];
+        const myReqs = JSON.parse(localStorage.getItem('AlbomZL_requests_' + currentUser)) || [];
 
         // Render Friends
         friendsList.innerHTML = myFriends.map(f => `
             <div class="sidebar-item">
-                <span class="sidebar-item-name" onclick="window.location.href='${f}_antisite.html'">${f.replace(/_/g, ' ')}</span>
+                <span class="sidebar-item-name" onclick="window.location.href='${f}_AlbomZL.html'">${f.replace(/_/g, ' ')}</span>
             </div>
         `).join('') || '<div style="color:var(--text-secondary); padding: 10px;">No friends yet</div>';
 
         // Render Saved
         savedList.innerHTML = mySaved.map(s => `
             <div class="sidebar-item">
-                <span class="sidebar-item-name" onclick="window.location.href='${s}_antisite.html'">${s.replace(/_/g, ' ')}</span>
+                <span class="sidebar-item-name" onclick="window.location.href='${s}_AlbomZL.html'">${s.replace(/_/g, ' ')}</span>
             </div>
         `).join('') || '<div style="color:var(--text-secondary); padding: 10px;">No saved users</div>';
 
@@ -647,7 +647,7 @@ document.addEventListener('DOMContentLoaded', () => {
             reqsContainer.style.display = 'block';
             reqsList.innerHTML = myReqs.map(r => `
                 <div class="sidebar-item">
-                    <span class="sidebar-item-name" onclick="window.location.href='${r}_antisite.html'">${r.replace(/_/g, ' ')}</span>
+                    <span class="sidebar-item-name" onclick="window.location.href='${r}_AlbomZL.html'">${r.replace(/_/g, ' ')}</span>
                     <button class="btn btn-primary" style="padding: 2px 8px; font-size: 0.8rem;" onclick="acceptRequest('${r}')">Accept</button>
                 </div>
             `).join('');
@@ -659,19 +659,19 @@ document.addEventListener('DOMContentLoaded', () => {
     window.acceptRequest = function (requester) {
         if (!currentUser) return;
         // Add to friends
-        let myFriends = JSON.parse(localStorage.getItem('antisite_friends_' + currentUser)) || [];
+        let myFriends = JSON.parse(localStorage.getItem('AlbomZL_friends_' + currentUser)) || [];
         if (!myFriends.includes(requester)) myFriends.push(requester);
-        localStorage.setItem('antisite_friends_' + currentUser, JSON.stringify(myFriends));
+        localStorage.setItem('AlbomZL_friends_' + currentUser, JSON.stringify(myFriends));
 
         // Add me to requester's friends
-        let theirFriends = JSON.parse(localStorage.getItem('antisite_friends_' + requester)) || [];
+        let theirFriends = JSON.parse(localStorage.getItem('AlbomZL_friends_' + requester)) || [];
         if (!theirFriends.includes(currentUser)) theirFriends.push(currentUser);
-        localStorage.setItem('antisite_friends_' + requester, JSON.stringify(theirFriends));
+        localStorage.setItem('AlbomZL_friends_' + requester, JSON.stringify(theirFriends));
 
         // Remove from pending
-        let myReqs = JSON.parse(localStorage.getItem('antisite_requests_' + currentUser)) || [];
+        let myReqs = JSON.parse(localStorage.getItem('AlbomZL_requests_' + currentUser)) || [];
         myReqs = myReqs.filter(r => r !== requester);
-        localStorage.setItem('antisite_requests_' + currentUser, JSON.stringify(myReqs));
+        localStorage.setItem('AlbomZL_requests_' + currentUser, JSON.stringify(myReqs));
 
         alert('Friend request accepted!');
         renderSidebar();
@@ -703,7 +703,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const blob = new Blob([exportHTML], { type: 'text/html' });
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = `${titleText.replace(/\s+/g, '_')}_antisite.html`;
+        a.download = `${titleText.replace(/\s+/g, '_')}_AlbomZL.html`;
         a.click();
     }
 
