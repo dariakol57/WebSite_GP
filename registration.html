@@ -92,6 +92,11 @@
             </div>
 
             <div>
+                <label class="reg-label" for="reg-email">Ваш Email</label>
+                <input class="reg-input" id="reg-email" type="email" placeholder="example@mail.com">
+            </div>
+
+            <div>
                 <label class="reg-label" for="reg-username">Логин (Имя пользователя)</label>
                 <input class="reg-input" id="reg-username" type="text"
                     placeholder="Уникальный логин (только англ. буквы и цифры)">
@@ -159,6 +164,7 @@
         document.getElementById('create-album-btn').addEventListener('click', async () => {
             const name = document.getElementById('reg-name').value.trim();
             const surname = document.getElementById('reg-surname').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
             const username = document.getElementById('reg-username').value.trim();
             const photoInput = document.getElementById('reg-photo');
             const password = document.getElementById('reg-password').value;
@@ -166,6 +172,7 @@
 
             if (!name) { alert('Пожалуйста, введите имя'); return; }
             if (!surname) { alert('Пожалуйста, введите фамилию'); return; }
+            if (!email) { alert('Пожалуйста, введите Email'); return; }
             if (!username) { alert('Пожалуйста, введите логин'); return; }
             if (!password || password.length < 6) { alert('Пожалуйста, введите пароль (минимум 6 символов)'); return; }
             if (password !== passwordConfirm) { alert('Пароли не совпадают!'); return; }
@@ -176,7 +183,6 @@
             }
 
             const ownerId = username;
-            const fakeEmail = `${username.toLowerCase()}@albomzl.local`;
 
             // Photo handling
             let finalPhotoUrl = 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=400';
@@ -203,7 +209,7 @@
 
                 // 1. Sign up user via Supabase Auth
                 const { data: authData, error: authError } = await supabase.auth.signUp({
-                    email: fakeEmail,
+                    email: email,
                     password: password
                 });
 
